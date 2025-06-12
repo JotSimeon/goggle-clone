@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Keep Clone</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f3f4;
+            color: #202124;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            /* overflow: hidden; */
+        }
+
+        /* Top Bar Styling */
+        .top-bar {
+            background-color: #ffffff;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+            min-height: 64px;
+        }
+
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .top-bar h1 {
+            font-size: 1.5em;
+            margin: 0;
+            color: #5f6368;
+            font-weight: 400;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #5f6368;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-btn:hover {
+            background-color: #f1f3f4;
+        }
+
+        .search-container {
+            flex-grow: 1;
+            max-width: 720px;
+            background-color: #f1f3f4;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            margin: 0 20px;
+        }
+
+        .search-icon {
+            color: #5f6368;
+            margin-right: 10px;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            font-size: 1em;
+            padding: 5px 0;
+            color: #202124;
+        }
+
+        .search-input::placeholder {
+            color: #80868b;
+        }
+
+        .search-input:focus {
+            outline: none;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-button,
+        .profile-icon {
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+            color: #5f6368;
+        }
+
+        .icon-button:hover {
+            background-color: #f1f3f4;
+        }
+
+        .profile-icon {
+            font-size: 32px;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 1rem;
+            color: #5f6368;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            z-index: 1000;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+
+        .sidebar li:hover {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        /* Content Area Styling */
+        .content-area {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .note-input-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        #noteTitle,
+        #noteContent {
+            border: none;
+            font-size: 1em;
+            padding: 5px 0;
+        }
+
+        #noteTitle {
+            font-weight: 500;
+        }
+
+        #noteContent {
+            resize: vertical;
+            min-height: 40px;
+            color: #3c4043;
+        }
+
+        .note-input-container input:focus,
+        .note-input-container textarea:focus {
+            outline: none;
+        }
+
+        .color-options {
+            display: none;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .color-option:hover {
+            border: 2px solid #1a73e8;
+        }
+
+        .color-picker-button {
+            background-color: white;
+            width: 30px;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .note-card {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+        }
+
+        .note-card h3 {
+            margin: 0;
+            font-size: 1em;
+            color: #202124;
+        }
+
+        .note-card p {
+            font-size: 0.85em;
+            color: #5f6368;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .note-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .loading-text {
+            text-align: center;
+            color: #80868b;
+            font-size: 1.1em;
+            margin-top: 50px;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 10px;
+            }
+
+            .notes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="menu-btn" onclick="toggleSidebar()">
+                    <img src="https://img.icons8.com/material-rounded/24/menu--v1.png" alt="Menu" />
+                </button>
+                <h1>Keep Clone</h1>
+            </div>
+            <div class="search-container">
+                <!-- <span class="material-icons search-icon">search</span> -->
+                <img src="https://img.icons8.com/material-outlined/24/search--v1.png" alt="Search"
+                    class="search-icon" />
+                <input type="text" placeholder="Search" class="search-input">
+            </div>
+            <div class="top-bar-right">
+                <img src="https://img.icons8.com/ios/24/refresh--v1.png" alt="Refresh" class="icon-button" />
+                <img src="https://img.icons8.com/ios/24/split-vertical.png" alt="View Agenda" class="icon-button" />
+                <img src="https://img.icons8.com/ios/24/settings--v1.png" alt="Settings" class="icon-button" />
+                <img src="https://img.icons8.com/ios/40/user-male-circle--v1.png" alt="Profile" class="profile-icon" />
+            </div>
+        </header>
+
+        <div class="main">
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h2>Menu</h2>
+                    <!-- Close Button -->
+                    <button class="btn btn-sm btn-close" onclick="toggleSidebar()">
+                    </button>
+                </div>
+                <div class="sidebar-body">
+                    <ul>
+                        <li onclick="filterNotes('all')">
+                            <img src="https://img.icons8.com/ios-filled/24/light-on--v1.png" alt="Notes" />
+                            All Notes
+                        </li>
+                        <li onclick="filterNotes('favorites')">
+                            <img src="https://img.icons8.com/ios-filled/24/star--v1.png" alt="Favorites" />
+                            Favorites
+                        </li>
+                        <li onclick="filterNotes('archived')">
+                            <img src="https://img.icons8.com/ios-filled/24/archive--v1.png" alt="Archived" />
+                            Archived
+                        </li>
+                        <li onclick="filterNotes('trashed')">
+                            <img src="https://img.icons8.com/ios-filled/24/delete--v1.png" alt="Trash" />
+                            Trash
+                        </li>
+                        <li onclick="deletePermanently()">
+                            <img src="https://img.icons8.com/ios-filled/24/delete-forever.png" alt="Delete Forever" />
+                            Delete Permanently
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+
+            <div class="content-area">
+                <div class="note-input-container">
+                    <input id="noteTitle" type="text" placeholder="Title" />
+                    <textarea id="noteContent" rows="4" placeholder="Take a note..."></textarea>
+                    <div class="d-flex justify-content-between">
+                        <div class="">
+                            <button class="color-picker-button" onclick="toggleColorOptions()">
+                                <img src="https://img.icons8.com/ios-filled/24/paint-palette.png" alt="Palette" />
+                            </button>
+                            <div class="color-options" id="colorOptions">
+                                <div class="color-option" style="background-color: #f28b82;"
+                                    onclick="setColor('#f28b82')">
+                                </div>
+                                <div class="color-option" style="background-color: #fbbc04;"
+                                    onclick="setColor('#fbbc04')">
+                                </div>
+                                <div class="color-option" style="background-color: #fff475;"
+                                    onclick="setColor('#fff475')">
+                                </div>
+                                <div class="color-option" style="background-color: #ccff90;"
+                                    onclick="setColor('#ccff90')">
+                                </div>
+                                <div class="color-option" style="background-color: #a7ffeb;"
+                                    onclick="setColor('#a7ffeb')">
+                                </div>
+                            </div>
+                        </div>
+                        <label for="imageDisplay" class="upload-label">
+                            <img src="https://img.icons8.com/ios/24/image--v1.png" alt="Add Image" /> Add Image
+                        </label>
+                        <input type="file" accept="image/*" id="imageDisplay" style="display: none;" />
+                    </div>
+                    <button id="addNoteBtn" onclick="addText()">Add</button>
+                </div>
+
+                <div id="noteContainer" class="notes-grid">
+                    <p class="loading-text">No notes to display.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let notes = JSON.parse(localStorage.getItem("notes")) || [];
+        let currentFilter = 'all';
+        let editIndex = null;
+        let selectedColor = "#ffffff";
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+        }
+
+        function toggleColorOptions() {
+            const colorOptions = document.getElementById("colorOptions");
+            colorOptions.style.display = colorOptions.style.display === "flex" ? "none" : "flex";
+        }
+
+        function setColor(color) {
+            selectedColor = color;
+        }
+
+        function addText() {
+            const title = document.getElementById("noteTitle").value.trim();
+            const content = document.getElementById("noteContent").value.trim();
+            const fileInput = document.getElementById("imageDisplay");
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            if (!title && !content) return;
+
+            reader.onloadend = function () {
+                const newNote = {
+                    title,
+                    content,
+                    color: selectedColor,
+                    image: file ? reader.result : (editIndex !== null ? notes[editIndex].image : null),
+                    favorite: false,
+                    archived: false,
+                    trashed: false
+                };
+
+                if (editIndex !== null) {
+                    notes[editIndex] = newNote;
+                    editIndex = null;
+                } else {
+                    notes.push(newNote);
+                }
+
+                localStorage.setItem("notes", JSON.stringify(notes));
+                renderNotes();
+                resetInputs();
+            };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                reader.onloadend();
+            }
+        }
+
+        function renderNotes() {
+            const noteContainer = document.getElementById("noteContainer");
+            noteContainer.innerHTML = "";
+
+            notes.forEach((note, index) => {
+                if (currentFilter === 'favorites' && !note.favorite) return;
+                if (currentFilter === 'archived' && !note.archived) return;
+                if (currentFilter === 'trashed' && !note.trashed) return;
+                if (currentFilter === 'all' && note.trashed) return;
+
+                const noteDiv = document.createElement("div");
+                noteDiv.className = "note-card";
+                noteDiv.style.backgroundColor = note.color;
+                noteDiv.innerHTML = `
+                    <h3>${note.title}</h3>
+                    ${note.image ? `<img src="${note.image}" class="note-image" />` : ""}
+                    <p>${note.content}</p>
+                    <div>
+                        <button onclick="editText(${index})">Edit</button>
+                        <button onclick="toggleFavorite(${index})">${note.favorite ? '★' : '☆'}</button>
+                        <button onclick="toggleArchive(${index})">Archive</button>
+                        <button onclick="moveToTrash(${index})">Trash</button>
+                    </div>
+                `;
+                noteContainer.appendChild(noteDiv);
+            });
+        }
+
+        function editText(index) {
+            const note = notes[index];
+            document.getElementById("noteTitle").value = note.title;
+            document.getElementById("noteContent").value = note.content;
+            selectedColor = note.color;
+            editIndex = index;
+            document.getElementById("imageDisplay").value = "";
+        }
+
+        function toggleFavorite(index) {
+            notes[index].favorite = !notes[index].favorite;
+            localStorage.setItem("notes", JSON.stringify(notes));
+            renderNotes();
+        }
+
+        function toggleArchive(index) {
+            notes[index].archived = !notes[index].archived;
+            localStorage.setItem("notes", JSON.stringify(notes));
+            renderNotes();
+        }
+
+        function moveToTrash(index) {
+            notes[index].trashed = true;
+            localStorage.setItem("notes", JSON.stringify(notes));
+            renderNotes();
+        }
+
+        function filterNotes(type) {
+            currentFilter = type;
+            renderNotes();
+        }
+
+        function deletePermanently() {
+            // Filter out notes that are not trashed
+            notes = notes.filter(note => !note.trashed);
+
+            // Update localStorage with the remaining notes
+            localStorage.setItem("notes", JSON.stringify(notes));
+
+            // Re-render the notes
+            renderNotes();
+        }
+
+        function resetInputs() {
+            document.getElementById("noteTitle").value = "";
+            document.getElementById("noteContent").value = "";
+            selectedColor = "#ffffff";
+            document.getElementById("imageDisplay").value = "";
+        }
+
+        renderNotes();
+    </script>
+</body>
+
+</html>
