@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -291,6 +292,34 @@
             .notes-grid {
                 grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             }
+
+            /* Navbar Responsiveness */
+            .top-bar {
+                flex-direction: column; 
+                align-items: flex-start; 
+                padding: 10px; 
+            }
+
+            .top-bar-left {
+                width: 100%; 
+                justify-content: space-between; 
+            }
+
+            .search-container {
+                width: 100%; 
+                margin: 10px 0; 
+            }
+
+            .top-bar-right {
+                width: 100%; 
+                justify-content: space-between; 
+                margin-top: 10px; 
+            }
+
+            .icon-button,
+            .profile-icon {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -300,7 +329,7 @@
         <header class="top-bar">
             <div class="top-bar-left">
                 <button class="menu-btn" onclick="toggleSidebar()">
-                    <img src="https://img.icons8.com/material-rounded/24/menu--v1.png" alt="Menu" />
+                    <span class="material-icons">menu</span>
                 </button>
                 <h1>Keep Clone</h1>
             </div>
