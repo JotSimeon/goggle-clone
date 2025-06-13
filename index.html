@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -343,7 +342,7 @@
                 <img src="https://img.icons8.com/ios/24/refresh--v1.png" alt="Refresh" class="icon-button" />
                 <img src="https://img.icons8.com/ios/24/split-vertical.png" alt="View Agenda" class="icon-button" />
                 <img src="https://img.icons8.com/ios/24/settings--v1.png" alt="Settings" class="icon-button" />
-                <img src="https://img.icons8.com/ios/40/user-male-circle--v1.png" alt="Profile" class="profile-icon" />
+                <button class="btn " onclick="logout()"> <img src="https://img.icons8.com/ios/40/user-male-circle--v1.png" alt="Profile" class="profile-icon" /></button> <!-- Logout Button -->
             </div>
         </header>
 
@@ -558,6 +557,15 @@
             document.getElementById("noteContent").value = "";
             selectedColor = "#ffffff";
             document.getElementById("imageDisplay").value = "";
+        }
+
+        function logout() {
+            // Show confirmation dialog
+            const confirmLogout = confirm("Are you sure you want to logout?");
+            if (confirmLogout) {
+                // Redirect to login page
+                window.location.href = "index2.html"; // Replace with the actual login page path
+            }
         }
 
         renderNotes();
