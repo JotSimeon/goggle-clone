@@ -284,6 +284,10 @@
         }
 
         @media (max-width: 768px) {
+            .top-bar {
+                min-height: 200px;
+            }
+
             .content-area {
                 padding: 10px;
             }
@@ -294,25 +298,25 @@
 
             /* Navbar Responsiveness */
             .top-bar {
-                flex-direction: column; 
-                align-items: flex-start; 
-                padding: 10px; 
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
             }
 
             .top-bar-left {
-                width: 100%; 
-                justify-content: space-between; 
+                width: 100%;
+                justify-content: space-between;
             }
 
             .search-container {
-                width: 100%; 
-                margin: 10px 0; 
+                width: 100%;
+                margin: 10px 0;
             }
 
             .top-bar-right {
-                width: 100%; 
-                justify-content: space-between; 
-                margin-top: 10px; 
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
             }
 
             .icon-button,
@@ -338,11 +342,13 @@
                     class="search-icon" />
                 <input type="text" placeholder="Search" class="search-input">
             </div>
-            <div class="top-bar-right">
+            <div class="top-bar-right ">
                 <img src="https://img.icons8.com/ios/24/refresh--v1.png" alt="Refresh" class="icon-button" />
                 <img src="https://img.icons8.com/ios/24/split-vertical.png" alt="View Agenda" class="icon-button" />
                 <img src="https://img.icons8.com/ios/24/settings--v1.png" alt="Settings" class="icon-button" />
-                <button class="btn " onclick="logout()"> <img src="https://img.icons8.com/ios/40/user-male-circle--v1.png" alt="Profile" class="profile-icon" /></button> <!-- Logout Button -->
+                <button class="btn " onclick="logout()"> <img
+                        src="https://img.icons8.com/ios/40/user-male-circle--v1.png" alt="Profile"
+                        class="profile-icon" /></button> <!-- Logout Button -->
             </div>
         </header>
 
@@ -381,7 +387,7 @@
             </aside>
 
             <div class="content-area">
-                <div class="note-input-container">
+                <div class="note-input-container mt-3">
                     <input id="noteTitle" type="text" placeholder="Title" />
                     <textarea id="noteContent" rows="4" placeholder="Take a note..."></textarea>
                     <div class="d-flex justify-content-between">
